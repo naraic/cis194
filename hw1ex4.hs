@@ -19,3 +19,7 @@ sumDigits (n : ns)
     | n >= 10  = sumDigits (toDigits n) + sumDigits ns
     | otherwise = n + sumDigits ns
 
+validate :: Integer -> Bool
+validate n
+         | sumDigits (doubleEveryOtherRev (toDigitsRev n)) `mod` 10 == 0 = True
+         | otherwise  = False
