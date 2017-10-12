@@ -3,5 +3,6 @@ type Peg = String
 type Move = (Peg, Peg)
 
 hanoi :: Integer -> Peg -> Peg -> Peg -> [Move]
-hanoi 1 a b c = [(a, b)]
-hanoi n a b c = hanoi (n-1) a c b ++ hanoi 1 a b c ++ hanoi (n-1) c b a
+hanoi n src goal tmp 
+      | n = 1 src goal tmp = [(src, goal)]
+      | hanoi (n-1) src tmp goal ++ hanoi 1 src goal tmp ++ hanoi (n-1) tmp goal src
