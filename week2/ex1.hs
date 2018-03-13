@@ -11,6 +11,5 @@ parseWords ("E":(e:(t:m)))         = LogMessage (Error (read e)) (read t) (unwor
 parseWords m                       = Unknown (unwords m)
 
 parse :: String -> [LogMessage]
-parse []    = []
-parse (m:ms)  = (parseMessage m):(parse ms)
+parse m    = parseMessage <$> lines m
 
