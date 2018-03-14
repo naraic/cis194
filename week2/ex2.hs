@@ -20,3 +20,6 @@ insert m Leaf = Node Leaf m Leaf
 insert m@(LogMessage _ t _) (Node left n@(LogMessage _ time _) right) 
        | t < time = Node (insert m left) n right  
        | t > time = Node left n (insert m right)
+       | otherwise = tree --this is in the case that the value already exists, don't change the tree
+
+
