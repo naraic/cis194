@@ -32,6 +32,21 @@ buildHelper (m:ms) t = buildHelper ms (insert m t)
 
 inOrder :: MessageTree -> [LogMessage]
 inOrder Leaf = []
-inOrder (Node Leaf m right) = m : inOrder right
 inOrder (Node left m right) = inOrder left ++ (m : inOrder right)
+
+
+whatWentWrong :: [LogMessage] -> [String]
+whatWentWrong msgs = prioritise (inOrder (build msgs))
+
+prioritise :: [LogMessage] -> [String]
+prioritise [] = []
+prioritise ((LogMessage (Error l) _ mesg) : ms)
+    | l >= 50 = (mesg : prioritise ms)
+    | otherwise = prioritise ms
+prioritise (_:ms) = prioritise ms
+
+
+
+    
+
 
