@@ -11,7 +11,7 @@ thus: anonymous functions...
 
 this function returns a list of Integers, all greater than 100!
 
-the syntax begins with a backslash, which is supposed to look like a lambda, with the short leg missing.
+the syntax for the anonymous function begins with a backslash, which is supposed to look like a lambda, with the short leg missing.
 
 they can have multiple arguments:
 
@@ -55,7 +55,7 @@ it fits with a "wholemeal" style, where we thin about composing high-level trans
 for example:
 
 >myTest :: [Integer] -> Bool
->myTest xs = even (length (greaterThan 100 xs))
+>myTest xs = even (length (greaterThan100 xs))
 
 can be rewritten as:
 
@@ -136,7 +136,7 @@ PARTIAL APPLICATION
 because functions in haskell are curried, partial application is easy!
 partial application means we can have a function of multiple arguments and apply it to just some of the arguments and be returned a new function 
 but since there are no functions of multiple arguments, this simplifies the concept, once the function is being applied to its first argument...
-the exception to this is infix operators, which we have seen can be partially applied to either of the two arguments using OPERATOR SELECTION. 
+the exception to this is infix operators, which we have seen can be partially applied to either of the two arguments using OPERATOR SECTION. 
 in practice this turns out to be not a large limitation - there's an art to deciding the order of arguments to a function to make partial applications of it as useful as possible. 
 the arguments should be ordered from "least to greatest variation" - arguments that will often be the same come first and always different come last...
 so... put things like lists in the last place? 
