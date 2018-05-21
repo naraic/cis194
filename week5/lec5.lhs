@@ -27,7 +27,7 @@ in this example we are the implementors, and we have tried to use a specific typ
 
 the type "a -> a -> a" is a promise, that the function will work no matter what type the caller chooses.
 
-we might like to imageine an implementation that uses a function which can determine the type of the passed parameter at runtime, such as "typeOf" or "instanceOf", but such functions DO NOT EXIST in haskell!! 
+we might like to imagine an implementation that uses a function which can determine the type of the passed parameter at runtime, such as "typeOf" or "instanceOf", but such functions DO NOT EXIST in haskell!! 
 in fact, these functions would be impossible to implement in haskell, because haskell erases the types after compilation and at runtime the types no longer exist! there are reasons for this we do not yet understand.
 
 
@@ -150,7 +150,7 @@ COMPARING TYPE CLASSES WITH JAVA INTERFACES
 >  Blerg :: a -> b -> Bool
 
 using blerg amounts to doing "multiple dispatch": which implementation of blerg the compiler should cooose depends on the types of both a and b, there's no easy way to do this in java. 
-haskell type classes can also easily handly binary (or ternary etc) methods as in:
+haskell type classes can also easily handle binary (or ternary etc) methods as in:
 
 >class Num a where
 > (+) :: a -> a -> a
