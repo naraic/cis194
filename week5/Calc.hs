@@ -1,63 +1,107 @@
+{-# LANGUAGE FlexibleInstances, TypeSynonymInstances #-}
+
 module Calc where
-import ExprT
+
 import Parser
+import ExprT
+import qualified StackVM as VM
+
+import qualified Data.Map as M
+--qualified means that functions from the import _must_ be prefixed with "M." - useful!
 
 class Expr a where
     lit :: Integer -> a
-    add :: a -> a -> a
-    mul :: a -> a -> a
+    add :: a -> a -> a 
+    mul :: a -> a -> a 
 
 instance Expr ExprT where
     lit = Lit
-    add = Add 
-    mul = Mul 
-
-eval :: ExprT -> Integer
-eval (Lit n) = n
-eval (Add e1 e2) = (eval e1) + (eval e2)
-eval (Mul e1 e2) = (eval e1) * (eval e2)
-
-evalStr :: String -> Maybe Integer
-evalStr = maybeEval . (parseExp Lit Add Mul)
-
-maybeEval :: Maybe ExprT -> Maybe Integer
-maybeEval Nothing = Nothing
-maybeEval (Just e) = Just (eval e)
-
-reify :: ExprT -> ExprT
-reify = id
-
---instance Expr Integer where
---    lit = Lit 
---    add = Add
---    mul = Mul
-
-
-instance Expr Bool where
-    lit n 
-        | n <= 0 = False
-        | otherwise = True
-    add = (||)
-    mul = (&&)
+    add = Add
+    mul = Mul
 
 instance Expr Integer where
     lit = id
     add = (+)
     mul = (*)
 
-newtype MinMax = MinMax Integer deriving (Eq, Show)
+instance Expr Bool where
+    lit = (>=0)
+    add = (&&)
+    mul = (||)
+
+newtype MinMax = MinMax Integer deriving (Eq, Show, Ord)
+
 instance Expr MinMax where
-    lit = MinMax 
-    add (MinMax x) (MinMax y) = MinMax (max x y)
-    mul (MinMax x) (MinMax y) = MinMax (min x y)
+    lit = MinMax
+    add = max
+    mul = min
 
 newtype Mod7 = Mod7 Integer deriving (Eq, Show)
-instance Expr Mod7 where
-    lit n = Mod7 (mod n 7)
-    add (Mod7 x) (Mod7 y) = lit (x + y)
-    mul (Mod7 x) (Mod7 y) = lit (x * y)
 
-testExp :: Expr a => Maybe a
-testExp = parseExp lit add mul "(3 * -4) +5"
+instance Expr Mod7 where
+    lit n = Mod7 $ mod n 7
+    add (Mod7 a) (Mod7 b) = lit $ a + b
+    mul (Mod7 a) (Mod7 b) = lit $ a * b 
+
+eval :: ExprT -> Integer
+eval (Lit n) = n
+eval (Add x y) = eval x + eval y
+eval (Mul x y) = eval x * eval y
+
+
+maybeEval :: Maybe ExprT -> Maybe Integer
+maybeEval Nothing = Nothing
+maybeEval (Just e) = Just $ eval e
+
+evalStr :: String -> Maybe Integer
+evalStr = maybeEval . parseExp Lit Add Mul
+
+reify :: ExprT -> ExprT
+reify = id
+
+--ex 5
+
+instance Expr VM.Program where
+    lit n = [VM.PushI n]
+    add n m = n ++ m ++ [VM.Add]
+    mul n m = n ++ m ++ [VM.Mul]
+
+compile :: String -> Maybe VM.Program
+compile = parseExp lit add mul
+
+--ex6
+
+data VarExprT = LitV Integer
+    | AddV VarExprT VarExprT
+    | MulV VarExprT VarExprT
+    | Var String
+    deriving (Show, Eq)
+
+class HasVars a where
+    var :: String -> a
+
+instance Expr VarExprT where
+    lit = LitV
+    add = AddV
+    mul = MulV
+
+instance HasVars VarExprT where
+    var = Var
+
+instance HasVars (M.Map String Integer -> Maybe Integer) where
+    var v = (M.lookup v)
+
+instance Expr (M.Map String Integer -> Maybe Integer) where
+    lit n = \ _ -> Just n -- int -> a 
+    add e1 e2 = \ env -> maybeAdd (e1 env) (e2 env)
+    mul e1 e2 = \ env -> maybeMul (e1 env) (e2 env)
+
+maybeAdd :: Maybe Integer -> Maybe Integer -> Maybe Integer
+maybeAdd (Just n) (Just m) = Just $ n + m
+maybeAdd _ _ = Nothing
+
+maybeMul :: Maybe Integer -> Maybe Integer -> Maybe Integer
+maybeMul (Just n) (Just m) = Just $ n * m
+maybeMul _ _ = Nothing
 
 
