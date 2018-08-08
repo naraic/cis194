@@ -95,7 +95,7 @@ we can read this as:
 
 so, the type of (==):
 
->(==) :: Eq a -> a -> a -> Bool
+>(==) :: Eq a => a -> a -> Bool
 
 the Eq that comes before the "=>" is a "type class constraint" - which defines: for any type a, as long as a is an instance of Eq, (==) can take two values of type a and return a Bool. 
 it is a "type error" to call (==) on a non Eq type.
@@ -111,8 +111,8 @@ example:
 >   (F i1) == (F i2) = i1 == i2
 >   (G c1) == (G c2) = c1 == c2
 >   _ == _ = False
-
->foo1 /= foo2 = not (foo1 == foo2)
+>
+>   foo1 /= foo2 = not (foo1 == foo2)
 
 defining both (==) and (/=) seems almost repetitive - so haskell type classes offer "default implementations" of methods in terms of other methods. these should be used whenever an instance does not override the default definition on its own.
 
@@ -228,7 +228,7 @@ so x, y need to be instances of both Ord and Listable
 
 finally:
 
->insance (Listable a, Listable b) => Listable (a,b) where
+>instance (Listable a, Listable b) => Listable (a,b) where
 >    toList (x, y) = toList x ++ toList y
 
 we put type class constraints on an instance as well as on a function type... 
