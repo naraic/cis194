@@ -63,3 +63,9 @@ moreFun :: GuestList -> GuestList -> GuestList
 moreFun gl1@(GL _ f1) gl2@(GL _ f2) 
     | f1 > f2 = gl1
     | otherwise = gl2
+
+treeFold :: (Tree a -> b -> b) -> b -> Tree a -> b
+treeFold f z (Node val forest) 
+    | forest == [] = z
+    | otherwise = f val . foldr (treeFold f z) z forest
+
