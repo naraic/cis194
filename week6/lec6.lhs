@@ -41,7 +41,7 @@ the thunk is discarded by the garbage collector if it is unused after a function
 
 PATTERN MATCHING DRIVES EVALUATION
 
-when is expression oevaluation necessary? it's not quite always just when it's _used_ in the function, but instead... consider the following:
+when is expression evaluation necessary? it's not quite always when it's _used_ in the function, but instead... consider the following:
 
 >f1 :: Maybe a -> [Maybe a]
 >f1 m = [m,m]

@@ -1,6 +1,6 @@
 FOLDS, AGAIN
 
-we can use a folding function on litss, but can we generalise the idea to other types?
+we can use a folding function on lists, but can we generalise the idea to other types?
 
 consider the binary tree:
 
@@ -21,7 +21,7 @@ some functions:
 >treeSum Empty        = 0
 >treeSum (Node l x r) = x + treeSum l + TreeSum r
 
->treeDepth :: Tree a -> [a]
+>treeDepth :: Tree a -> Integer 
 >treeDepth Empty        = 0 
 >treeDepth (Node l _ r) = 1 + max (treeDepth l + TreeDepth r)
 
@@ -154,10 +154,6 @@ addition defines a monoid on integers, but so does multiplication. we can't give
 >    mappend = (+)
 
 >newtype Product a = Product a
->    mempty = Sum 0
->    mappend = (+)
-
->newtype Product a = Product a
 >    deriving (Eq, Ord, Num, Show)
 
 >getProduct :: Product a -> a
@@ -167,7 +163,7 @@ addition defines a monoid on integers, but so does multiplication. we can't give
 >    mempty = Product 1
 >    mappend = (*)
 
-note that to find, for example, the product of a list of Integers using mconcat, wehave to first turn them into values of the type Porduct Integer:
+note that to find, for example, the product of a list of Integers using mconcat, wehave to first turn them into values of the type Product Integer:
 
 >lst = [Integer]
 >lst = [1..10]
@@ -190,13 +186,3 @@ challenge:
 yes, there's and, or, 
 
 2. how would you make function types an instance of Monoid?
-
-
-
-
-
-
-
-
-
-
