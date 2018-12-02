@@ -1,13 +1,13 @@
 THE PROBLEM WITH PURITY
 
 1. functions cannot have external effects
-2. functinos may not depend on inputs that change over time (filesystem, keyboard, network)
+2. pures functions may not depend on inputs that change over time (filesystem, keyboard, network)
 
 
 THE IO TYPE
 
-values of "IO a" type are descriptions of effectful computations which would perform some effectful I/O operations and eventually produce a value of type "a". This type abstracts the effects from us, so that as a type we can look at it as a safe thing with no side effects.
-it's like a first-class emperative program. 
+values of "IO a" type are descriptions of effectful computations which would perform some effectful I/O operations and eventually produce a value of type "a". this type abstracts the effects from us, so that as a type we can look at it as a safe thing with no side effects. it's a description of an effectful computation.
+it's like a first-class imperative program. 
 
 imagine:
 
@@ -56,13 +56,13 @@ this runs two IO computations in sequence, looking at the type signature, we see
 
 it's kinda like "do this, do this, do this", but if we don't want to discard the result of the firs tcomptutation, we need something different... 
 we might naievly think "IO a -> IO b -> IO (a,b) could work, but this is insufficient also. we want the second computation to be able to depend on the result of the first. 
-eg, if an integer is read as input, then the second part uses the input to form an output, the second part depends on the result of the first part...
+e.g., if an integer is read as input, then the second part uses the input to form an output, the second part depends on the result of the first part...
 
 we use the bind operator (>>=) is used in this case:
 
 >(>>=) :: IO a -> (a -> IO b) -> IO b
 
-this... makes sense? it takes an IO a, which outputs an "a", then (a -> IO b), which uses a in the context of "IO b" and returns the IO b, which has changed depending on a... EASY?!
+this... makes sense? it takes an IO a, which outputs an "a", then (a -> IO b), which uses the result of the first "IO a" in the context of "IO b" and returns IO b, which has changed depending on "a"... EASY?!
 
 eg read a number from the user, print its successor
 NB: readLn :: Read a => IO a 
@@ -74,6 +74,7 @@ this is kinda ugly... but we'll improve on it in the future.
 
 
 RECORD SYNTAX
+(not related but needed for the assignment)
 
 suppose:
 >data D = C T1 T2 T3
@@ -84,7 +85,7 @@ this could also be written as:
 this is a type along with a name that's been specified for each field in the C constructor. 
     this is functionally identical as the previous declaration and we can still construct and pattern-match on values of type D as C v1, v2, v3) but there are benefits:
 
-1. each field name is automatically a projection function, which gets the value of that field out of a value of that type, here is the type:
+1. each field name is automatically a _projection function_, which gets the value of that field out of a value of that type, here is the type:
 
 >   field2 :: D -> T2
 
